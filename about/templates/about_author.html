@@ -1,0 +1,55 @@
+{% extends "extends/base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+{% load user_filters %}
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-3 mb-3 mt-1">
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="h3">
+                Об авторе
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="h6 text-muted">
+                Мой первый проект на Django!
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Тело страницы -->
+    <div class="col-md-9">
+      <div class="card-body">
+        <div class="card-text">
+          <p>
+            <b>Зовут, меня, Никита:</b>
+            <p>
+              Сначала думал что программирования это сложно и не для меня.
+            </p>
+            <p>
+              Потом, попробовал, очень понравилось.
+              Теперь думаю что программировать интересно но очень сложно.
+            </p>
+            <p>
+              Первый язык программирования был js. Потом перешёл на питон.
+            </p>
+          </p>
+          <hr>
+          <address>
+            Мои контактные данные:
+            <br><br>
+            Почта: <a href="mailto:ybr811@gmail.com">ybr811@gmail.com</a>
+            <br>
+            Вк: <a href="https://vk.com/ybr_2018">vk.com/ybr_2018</a>
+          </address>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
