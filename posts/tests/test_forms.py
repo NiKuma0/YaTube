@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from posts.models import Post
+from posts.models import Comment, Post
 
 User = get_user_model()
 
@@ -77,7 +77,7 @@ class TestFormPost(TestCase):
         )
         object = Post.objects.get(id=1)
         expected = 'test_killer 2.0'
-        self.assertRedirects(response, reverse('add_comment', args=[
+        self.assertRedirects(response, reverse('post', args=[
             self.user.username, 1]))
         self.assertEqual(object.text, expected)
 
@@ -113,3 +113,29 @@ class TestFormPost(TestCase):
                 image='posts/small.gif'
             ).exists()
         )
+
+    def test_comment_authoreized_client(self):
+        count = Comment.objects.count()
+        form_data = {
+            'text': 'Not tuday!'
+        }
+        response = self.authorized_client.post( # noqa
+            reverse('add_comment', args=(self.user.username, 1)),
+            form_data,
+            follow=True
+        )
+        self.assertEqual(Comment.objects.count(), count + 1)
+        self.assertEqual(
+            Comment.objects.get(author=self.user).text, form_data['text'])
+
+    def test_comment_guest_client(self):
+        count = Comment.objects.count()
+        form_data = {
+            'text': 'Not tuday!'
+        }
+        response = self.guest_client.post( # noqa
+            reverse('add_comment', args=(self.user.username, 1)),
+            form_data,
+            follow=True
+        )
+        self.assertEqual(Comment.objects.count(), count)

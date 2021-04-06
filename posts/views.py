@@ -141,8 +141,6 @@ def profile_follow(request, username):
     follow_obj = Follow.objects.filter(author=author, user=request.user)
     if author != request.user and not follow_obj.exists():
         Follow.objects.create(user=request.user, author=author).save()
-    else:
-        print(author != request.user and not follow_obj.exists())
     return redirect(reverse('profile', args=(username,)))
 
 
