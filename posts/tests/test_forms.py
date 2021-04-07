@@ -119,11 +119,12 @@ class TestFormPost(TestCase):
         form_data = {
             'text': 'Not tuday!'
         }
-        response = self.authorized_client.post( # noqa
+        response = self.authorized_client.post(  # noqa
             reverse('add_comment', args=(self.user.username, 1)),
             form_data,
             follow=True
         )
+        response
         self.assertEqual(Comment.objects.count(), count + 1)
         self.assertEqual(
             Comment.objects.get(author=self.user).text, form_data['text'])
@@ -133,9 +134,10 @@ class TestFormPost(TestCase):
         form_data = {
             'text': 'Not tuday!'
         }
-        response = self.guest_client.post( # noqa
+        response = self.guest_client.post(  # noqa
             reverse('add_comment', args=(self.user.username, 1)),
             form_data,
             follow=True
         )
+        response
         self.assertEqual(Comment.objects.count(), count)

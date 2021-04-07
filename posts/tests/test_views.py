@@ -194,6 +194,7 @@ class TestViews(TestCase):
         )
         response = self.follower_client.get(  # noqa
             reverse('profile_unfollow', args=(self.user.username,)))
+        response
         self.assertFalse(
             Follow.objects.filter(
                 user=self.follower, author=self.user).exists()

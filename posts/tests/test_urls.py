@@ -54,8 +54,8 @@ class TestUrls(TestCase):
             '/group/test-slug/': HTTPStatus.OK,
             '/new/': HTTPStatus.OK,
             '/anakentii/': HTTPStatus.OK,
-            f'/NeA/{TestUrls.post2.id}/': HTTPStatus.FOUND,
-            f'/NeA/{TestUrls.post2.id}/comment/': HTTPStatus.OK,
+            f'/NeA/{TestUrls.post2.id}/': HTTPStatus.OK,
+            f'/NeA/{TestUrls.post2.id}/comment/': HTTPStatus.FOUND,
             f'/{TestUrls.user.username}/'
             f'{TestUrls.post1.id}/edit/': HTTPStatus.OK,
             f'/NeA/{TestUrls.post2.id}/edit/': HTTPStatus.FOUND,
@@ -73,7 +73,6 @@ class TestUrls(TestCase):
             f'/{TestUrls.user.username}/'
             f'{TestUrls.post1.id}/edit/': 'new_post.html',
             f'/{TestUrls.user.username}/': 'profile.html',
-            f'/{TestUrls.user.username}/{TestUrls.post1.id}/comment/': 'post.html'
         }
 
         for reverse_name, template in template_url_names.items():
