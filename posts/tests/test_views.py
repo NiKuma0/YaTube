@@ -211,6 +211,23 @@ class TestViews(TestCase):
             with self.subTest(expected=expected_post):
                 self.assertEqual(post, expected_post)
 
+    def test_seccond_follow(self):
+        response = self.follower_client.get(
+            reverse('profile_follow', args=(self.user.username,))
+        )
+        self.assertRedirects(
+            response,
+            reverse('profile', args=(self.user.username,))
+        )
+        response = self.follower_client.get(
+            reverse('profile_follow', args=(self.user.username,))
+        )
+        self.assertEqual(Follow.objects.count(), 1)
+        self.assertRedirects(
+            response,
+            reverse('profile', args=(self.user.username,))
+        )
+
     def test_follow_index_null(self):
         response = self.authorized_client.get(reverse('follow_index'))
         context = response.context['page']

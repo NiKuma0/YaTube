@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from posts.models import Group, Post
+
+from posts.models import Comment, Group, Post, Follow
 
 User = get_user_model()
 
@@ -11,6 +12,7 @@ class PostTest(TestCase):
         super().setUpClass()
 
         cls.user = User.objects.create_user(username='test_username')
+        cls.follower = User.objects.create_user(username='follower')
 
         cls.group = Group.objects.create(
             title='Тестовая группа',
@@ -22,6 +24,15 @@ class PostTest(TestCase):
             text='Тестовый текст',
             author=cls.user,
             group=cls.group
+        )
+        cls.comment = Comment.objects.create(
+            text='test text',
+            author=cls.user,
+            post=cls.post
+        )
+        cls.follow = Follow.objects.create(
+            user=cls.follower,
+            author=cls.user
         )
 
     def test_verbose_name_group(self):
@@ -79,3 +90,28 @@ class PostTest(TestCase):
         post = PostTest.post
         expected_object_name = post.text[:15]
         self.assertEquals(expected_object_name, str(post))
+
+    def test_comment_model(self):
+        comment = self.comment
+        field_verboses = {
+            'post': 'Пост',
+            'created': 'Дата публикации',
+            'author': 'Автор',
+            'text': 'Текст',
+        }
+        for value, expected in field_verboses.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    comment._meta.get_field(value).verbose_name, expected)
+
+    def test_follow_model(self):
+        self.assertTrue(self.follower.follower.count() > 0)
+        self.assertTrue(self.user.following.count() > 0)
+
+    # def test_follow_model(self):
+    #     count_follow = Follow.objects.count()
+    #     Follow.objects.create(user=self.user, author=self.user)
+    #     try:
+    #         Follow.objects.create(user=self.user, author=self.user)
+    #     except:
+    #         self.assertEqual(Follow.objects.count(), count_follow + 1)

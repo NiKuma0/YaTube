@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls.base import reverse
 
 from .forms import PostForm, CommentForm
-from .models import Comment, Group, Post, User, Follow
+from .models import Group, Post, User, Follow
 
 
 def index(request):
@@ -97,13 +97,15 @@ def post_view(request, username, post_id):
 @login_required
 def add_comment(request, username, post_id):
     post = get_object_or_404(Post, id=post_id, author__username=username)
-    author_comment = Comment(author=request.user, post=post)
     form = CommentForm(
         request.POST or None,
-        instance=author_comment
     )
     if form.is_valid():
-        form.save()
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+
     return redirect(reverse('post', args=(username, post_id)))
 
 
@@ -122,10 +124,7 @@ def server_error(request):
 
 @login_required
 def follow_index(request):
-    authors = [
-        obj.author for obj in Follow.objects.filter(user=request.user).all()
-    ]
-    posts = Post.objects.filter(author__in=authors).all()
+    posts = Post.objects.filter(author__following__user=request.user).all()
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -137,15 +136,16 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    author = User.objects.get(username=username)
-    follow_obj = Follow.objects.filter(author=author, user=request.user)
-    if author != request.user and not follow_obj.exists():
-        Follow.objects.create(user=request.user, author=author).save()
+    author = get_object_or_404(User, username=username)
+    if author != request.user:
+        Follow.objects.get_or_create(user=request.user, author=author)
     return redirect(reverse('profile', args=(username,)))
 
 
 @login_required
 def profile_unfollow(request, username):
-    author = User.objects.get(username=username)
-    Follow.objects.get(user=request.user, author=author).delete()
+    author = get_object_or_404(User, username=username)
+    obj = Follow.objects.filter(user=request.user, author=author)
+    if obj.exists():
+        obj.delete()
     return redirect(reverse('profile', args=(username,)))

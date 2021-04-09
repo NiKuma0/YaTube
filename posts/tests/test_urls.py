@@ -93,3 +93,16 @@ class TestUrls(TestCase):
         url = '/imposible/tag'
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_follow_usrls(self):
+        urls = [
+            f'/{self.user.username}/follow/',
+            f'/{self.user.username}/unfollow/',
+            f'/{self.user.username}/unfollow/',
+        ]
+        for url in urls:
+            with self.subTest(url=url):
+                response = self.authorized_client.get(url)
+                response_guest = self.guest_client.get(url)
+                self.assertEqual(response_guest.status_code, HTTPStatus.FOUND)
+                self.assertRedirects(response, f'/{self.user.username}/')

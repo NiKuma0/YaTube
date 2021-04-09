@@ -1,14 +1,17 @@
 {% extends "extends/base.html" %}
 {% block title %}Подписки{% endblock %}
 {% block header %}Ваши подписки:{% endblock %}
-{% block content %}
-  <div class="container">
-    {% include 'include/menu.html' with follow=True %}
+{% load cache %}
+{% cache 20 sidefol %}
+  {% block content %}
     <div class="container">
-      {% for post in page %}
-        {% include 'include/post.html' with post=post %}
-      {% endfor %}
+      {% include 'include/menu.html' with follow=True %}
+      <div class="container">
+        {% for post in page %}
+          {% include 'include/post.html' with post=post %}
+        {% endfor %}
+      </div>
     </div>
-  </div>
-{% include "include/paginator.html" %}
-{% endblock %}
+  {% include "include/paginator.html" %}
+  {% endblock %}
+{% endcache %}

@@ -1,17 +1,17 @@
 {% extends "extends/base.html" %}
 {% block title %}Обновления на сайте{% endblock %}
 {% block header %}Последние обновления на сайте:{% endblock %}
-{% block content %}
-  <div class="container">
-    {% include 'include/menu.html' with index=True %}
-    {% load cache %}
-    {% cache 20 sidebar %}
+{% load cache %}
+{% cache 20 sidebar %}
+  {% block content %}
     <div class="container">
-      {% for post in page %}
-        {% include 'include/post.html' with post=post %}
-      {% endfor %}
+      {% include 'include/menu.html' with index=True %}
+      <div class="container">
+        {% for post in page %}
+          {% include 'include/post.html' with post=post %}
+        {% endfor %}
+      </div>
     </div>
-    {% endcache %}
-  </div>
-{% include "include/paginator.html" %}
-{% endblock %}
+  {% include "include/paginator.html" %}
+  {% endblock %}
+{% endcache %}
