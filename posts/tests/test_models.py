@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
@@ -108,10 +109,7 @@ class PostTest(TestCase):
         self.assertTrue(self.follower.follower.count() > 0)
         self.assertTrue(self.user.following.count() > 0)
 
-    # def test_follow_model(self):
-    #     count_follow = Follow.objects.count()
-    #     Follow.objects.create(user=self.user, author=self.user)
-    #     try:
-    #         Follow.objects.create(user=self.user, author=self.user)
-    #     except:
-    #         self.assertEqual(Follow.objects.count(), count_follow + 1)
+    def test_follow_second_model_creating(self):
+        Follow.objects.create(user=self.user, author=self.user)
+        with self.assertRaises(IntegrityError):
+            Follow.objects.create(user=self.user, author=self.user)
