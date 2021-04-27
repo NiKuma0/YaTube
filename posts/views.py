@@ -64,11 +64,10 @@ def post_edit(request, username, post_id):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
+    following = False
     if request.user.is_authenticated:
         following = Follow.objects.filter(
             user=request.user, author=author).exists()
-    else:
-        following = False
     posts = author.posts.all()
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')

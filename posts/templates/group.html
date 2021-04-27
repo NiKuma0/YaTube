@@ -1,12 +1,12 @@
 {% extends "extends/base.html" %}
 {% block title %}Записи сообщества {{ group.title }}{% endblock %}
-{% block header %}Записи группы:{% endblock %}
+{% block header %}{% endblock %}
 {% block content %}
 <main role="main" class="container">
-  <h1>{{ group.title }}</h1>
+  {% comment %} <h1>{{ group.title }}</h1>
   <p>{{ group.description|linebreaksbr }}</p>
-  <div class="row">
-    <!-- <div class="col-md-9">
+  <div class="row"> {% endcomment %}
+    <div class="col-md-9">
       <div class="card">
         <div class="card-body">
           <div class="h3">
@@ -17,11 +17,11 @@
           </div>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">
+          {% comment %} <li class="list-group-item">
             <div class="h6 text-muted">
               Подписчиков: XXX <br />
             </div>
-          </li>
+          </li> {% endcomment %}
           <li class="list-group-item">
             <div class="h6 text-muted">
               Записей: {{ group.posts.all|length }}
@@ -29,7 +29,7 @@
           </li>
         </ul>
       </div>
-    </div> -->
+    </div>
 
     <div class="col-md-9">
       <div class="container">
